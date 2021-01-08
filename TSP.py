@@ -3,6 +3,7 @@ import sys
 sys.modules['sklearn.externals.six'] = six
 import mlrose
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 
 def NacrtajTacke(naziv, x, y):
     plt.grid(True)
@@ -38,23 +39,41 @@ print('Najbolji fitness za najbolje rjesenje iznosi:', najbolji_fitness)
 #crtanje
 fig = plt.figure()
 ax = fig.add_subplot(111)
+img = mpimg.imread('evropa.png')
 brojac = 0
+max1 = - 5000000
+max2 = - 5000000
+min1 = 5000000
+min2 = 5000000
+
 for cl in koordinate:
     NacrtajTacke('$Travelling Salesman Problem$', cl[0], cl[1])
+    #ispis broja pored tacke
     ax.text(cl[0] + 0.1, cl[1] + 0.1, brojac, style='italic')
     brojac = brojac + 1
+    #prilagodjivanje xy koordinata
+    if(cl[0] > max1):
+        max1 = cl[0]
+    if(cl[1] > max2):
+        max2 = cl[1]
+    if (cl[0] < min1):
+        min1 = cl[0]
+    if (cl[1] < min2):
+        min2 = cl[1]
 
 for i in range(len(najbolje_rjesenje)):
     if(i+1 < len(najbolje_rjesenje)):
         SpojiTacke(najbolje_rjesenje[i], najbolje_rjesenje[i + 1], koordinate)
         if(i == 0):
+            #crtanje strelice koja pokayuje prvi grad
             ax.annotate('pocetni grad', xy = (koordinate[najbolje_rjesenje[i]][0], koordinate[najbolje_rjesenje[i]][1]),
                         xytext = (koordinate[najbolje_rjesenje[i]][0] - 1.9, koordinate[najbolje_rjesenje[i]][1] + 1),
                         arrowprops = dict(facecolor = 'red', shrink = 0.00001))
     else:
         SpojiTacke(najbolje_rjesenje[i], najbolje_rjesenje[0], koordinate)
 
-ax.axis([0, 7, 0, 7])
-#ax.axis([-45, 40, -30, 30])
+ax.axis([min1 - 1, max1 + 1, min2 - 1, max2 + 1])
+#dodavanje slike
+imgplot = plt.imshow(img, extent=[min1 - 1, max1 + 1, min2 - 1, max2 + 1])
 plt.show()
 
