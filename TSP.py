@@ -6,9 +6,14 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np
 
-def NacrtajTacke(naziv, x, y):
-    plt.plot(x, y, color='red', marker='o')
+def NacrtajGrafik(fig, naziv):
+    np.arange(min, max)
+    np.arange(min, max)
+    ax = fig.add_subplot(111)
+    DodajSliku(min, max)
+    plt.grid(True)
     plt.title(naziv)
+    return ax
 
 def SpojiTacke(nr1, nr2, lista_koordinata):
     x1 = lista_koordinata[nr1]
@@ -17,24 +22,24 @@ def SpojiTacke(nr1, nr2, lista_koordinata):
     y = [x1[1], x2[1]]
     plt.plot(x, y)
 
-#lista koordinata gradova
-koordinate = []
-#koordinate = [(1, 1), (4, 2), (5, 2), (6, 4), (4, 4), (3, 6), (1, 5), (2, 3)]
-#koordinate = [(-15.97, 5.02), (-29.39, -12.81), (-0.92, -19.91), (3.64, 14.47), (23.54, 19.58), (-16.45, 20.89)]
+def DodajSliku(min,max):
+    img = mpimg.imread('evropa.png')
+    imgplot = plt.imshow(img, extent=[min, max, min, max])
 
+#unos velicine koodrinata
 print("Unesite minimalnu veličinu koordinata: ")
 min = int(input())
 print("Unesite maksimalnu veličinu koordinata: ")
 max = int(input())
 
-x = np.arange(min,max)
-y = np.arange(min,max)
+#lista koordinata gradova
+koordinate = []
+#koordinate = [(1, 1), (4, 2), (5, 2), (6, 4), (4, 4), (3, 6), (1, 5), (2, 3)]
+#koordinate = [(-15.97, 5.02), (-29.39, -12.81), (-0.92, -19.91), (3.64, 14.47), (23.54, 19.58), (-16.45, 20.89)]
+
+#crtanje prvog grafika
 fig = plt.figure()
-ax = fig.add_subplot(111)
-img1 = mpimg.imread('evropa.png')
-imgplot = plt.imshow(img1, extent=[min, max, min, max])
-plt.grid(True)
-plt.title("Izađite iz prozora kada izaberete sve željene tačke i pričekajte")
+NacrtajGrafik(fig, "Izađite iz prozora kada izaberete sve željene tačke i pričekajte")
 plt.xlabel('$x$')
 plt.ylabel('$y$')
 
@@ -63,19 +68,21 @@ if(len(koordinate) != 0):
 else:
     najbolje_rjesenje = []
 
-#crtanje
+#crtanje drugog grafika
 fig = plt.figure()
-ax = fig.add_subplot(111)
-img2 = mpimg.imread('evropa.png')
+ax = NacrtajGrafik(fig, '$Travelling Salesman Problem$')
 brojac = 0
 
+#crtanje tacki
 for cl in koordinate:
-    NacrtajTacke('$Travelling Salesman Problem$', cl[0], cl[1])
+    plt.plot(cl[0], cl[1], color='red', marker='o')
     #ispis broja pored tacke
     ax.text(cl[0] + 0.1, cl[1] + 0.1, brojac, style='italic')
     brojac = brojac + 1
 
+#string za ispis najboljeg rjesenja ispod grafika
 string = 'Najbolje rješenje je sljedeći put gradova: '
+#spajanje tacki
 for i in range(len(najbolje_rjesenje)):
     if(i+1 < len(najbolje_rjesenje)):
         string = string + str(najbolje_rjesenje[i]) + ' -> '
@@ -85,8 +92,4 @@ for i in range(len(najbolje_rjesenje)):
         SpojiTacke(najbolje_rjesenje[i], najbolje_rjesenje[0], koordinate)
 
 plt.xlabel(string)
-ax.axis([min, max, min, max])
-#dodavanje slike
-imgplot = plt.imshow(img2, extent=[min, max, min, max])
-plt.grid(True)
 plt.show()
